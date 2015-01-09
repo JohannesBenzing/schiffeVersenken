@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+<script type="text/javascript" src="js/libs/jquery.js"></script>
+<script type="text/javascript" src="js/libs/jquery.ui.js"></script>
+<script type="text/javascript" src="js/libs/jquery.ui.core.js"></script>
+<script type="text/javascript" src="js/libs/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="js/libs/jquery.ui.mouse.js"></script>
+<script type="text/javascript" src="js/libs/jquery.ui.draggable.js"></script>
+<script type="text/javascript" src="js/libs/jquery-collision.min.js"></script>
+<script type="text/javascript" src="js/libs/jquery-ui-draggable-collision.js"></script>
+<script type="text/javascript" src="js/libs/json2.js"></script>
+<script type="text/javascript" src="js/libs/jquery.session.js"></script>
+<script type="text/javascript" src="js/libs/highcharts.js"></script>
+
+<script type="text/javascript" src="js/settings.js"></script>
+<script type="text/javascript" src="js/ship.js"></script>
+<script type="text/javascript" src="js/test.js"></script>
+
+<link rel="stylesheet" type="text/css" href="css/style.css"/>
+
+<audio id="shotSound">
+    <source src="assets/sound/shot.wav" type="audio/wav">
+</audio>
+<audio id="missedSound">
+    <source src="assets/sound/missed.mp3" type="audio/mpeg">
+</audio>
+<audio id="notLoadedSound">
+    <source src="assets/sound/notLoaded.wav" type="audio/wav">
+</audio>
+<audio id="hitSound">
+    <source src="assets/sound/hit.wav" type="audio/wav">
+</audio>
+
+<table id="map"></table>
+<table id="mapOpponent"></table>
+<div id="statistics"></div>
+<div id="statistics2"></div>
+<button id="btnFertig" onClick="sendMap();">Fertig</button>
+
+<!--  1x1 schiffe machen keinen spaß weil sie so schwer zu finden sind
+<div class="ship ship_1" style="left:  580px;top:  0px;" id="1">
+   <div class="crashzone" style="left:  50px;top:  0px; width:  50px; height:  50px;"></div>
+   <div class="crashzone" style="left: 0px;top: 50px; width:	50px; height:	50px;"></div>
+   <div class="coreship collider" style="left: 50px;top: 50px; width: 50px; height: 50px;"></div>
+   <div class="crashzone" style="left: 100px;top: 50px; width:	50px; height:	50px;"></div>
+   <div class="crashzone" style="left:	50px;top:  100px; width:  50px; height:  50px;"></div>
+</div>
+ -->
+<!-- falls man eine große lange crashzone(150px * 50px) nimmt, versagt der collisiondetection-algorithmus manchmal und schiffe können in die crashzone hineingesetzt werden ->"pixelartige" crashzonen mit 50*50px -->
+<div class="ship ship_2" style="left:  580px;top:  0px;" id="1">
+    <div class="crashzone" style="left: 50px;	top:  0px; 	width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left: 100px;	top:  0px; 	width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left:	 0px;	top: 50px;	width:	50px; height:  50px;"></div>
+    <div class="coreship collider" style="left: 50px;top: 50px; width: 100px; height: 50px;">
+        <img class="rotate_button" onClick="rotationButtonClicked(this);" src="assets/img/rotate.png"></div>
+    <div class="crashzone" style="left: 150px;top: 50px; width:	50px; height:	50px;"></div>
+    <div class="crashzone" style="left:	50px;top:  100px; width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left: 100px;top:  100px; width:  50px; height:  50px;"></div>
+</div>
+<div class="ship ship_2" style="left:  580px;top:  0px;" id="2">
+    <div class="crashzone" style="left: 50px;	top:  0px; 	width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left: 100px;	top:  0px; 	width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left:	 0px;	top: 50px;	width:	50px; height:  50px;"></div>
+    <div class="coreship collider" style="left: 50px;top: 50px; width: 100px; height: 50px;">
+        <img class="rotate_button" onClick="rotationButtonClicked(this);" src="assets/img/rotate.png"></div>
+    <div class="crashzone" style="left: 150px;top: 50px; width:	50px; height:	50px;"></div>
+    <div class="crashzone" style="left:	50px;top:  100px; width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left: 100px;top:  100px; width:  50px; height:  50px;"></div>
+</div>
+<div class="ship ship_2" style="left:  580px;top:  0px;" id="3">
+    <div class="crashzone" style="left: 50px;	top:  0px; 	width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left: 100px;	top:  0px; 	width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left:	 0px;	top: 50px;	width:	50px; height:  50px;"></div>
+    <div class="coreship collider" style="left: 50px;top: 50px; width: 100px; height: 50px;">
+        <img class="rotate_button" onClick="rotationButtonClicked(this);" src="assets/img/rotate.png"></div>
+    <div class="crashzone" style="left: 150px;top: 50px; width:	50px; height:	50px;"></div>
+    <div class="crashzone" style="left:	50px;top:  100px; width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left: 100px;top:  100px; width:  50px; height:  50px;"></div>
+</div>
+<div class="ship ship_3" style="left:  880px;top:  0px;" id="4">
+    <div class="crashzone" style="left: 50px;	top:  0px; 	width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left: 100px;	top:  0px; 	width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left: 150px;	top:  0px; 	width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left:	 0px;	top: 50px;	width:	50px; height:  50px;"></div>
+    <div class="coreship collider" style="left: 50px;top: 50px; width: 150px; height: 50px;">
+        <img class="rotate_button" onClick="rotationButtonClicked(this);" src="assets/img/rotate.png"></div>
+    <div class="crashzone" style="left: 200px;top: 50px; width:	50px; height:	50px;"></div>
+    <div class="crashzone" style="left:	50px;top:  100px; width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left: 100px;top:  100px; width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left:	150px;top: 100px; width:  50px; height:  50px;"></div>
+</div>
+<div class="ship ship_3" style="left:  880px;top:  0px;" id="5">
+    <div class="crashzone" style="left: 50px;	top:  0px; 	width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left: 100px;	top:  0px; 	width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left: 150px;	top:  0px; 	width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left:	 0px;	top: 50px;	width:	50px; height:  50px;"></div>
+    <div class="coreship collider" style="left: 50px;top: 50px; width: 150px; height: 50px;">
+        <img class="rotate_button" onClick="rotationButtonClicked(this);" src="assets/img/rotate.png"></div>
+    <div class="crashzone" style="left: 200px;top: 50px; width:	50px; height:	50px;"></div>
+    <div class="crashzone" style="left:	50px;top:  100px; width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left: 100px;top:  100px; width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left:	150px;top: 100px; width:  50px; height:  50px;"></div>
+</div>
+<div class="ship ship_4" style="left:  0px;top:  0px;" id="6">
+    <div class="crashzone" style="left: 50px;	top:  0px; 	width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left: 100px;	top:  0px; 	width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left: 150px;	top:  0px; 	width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left: 200px;	top:  0px; 	width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left:	 0px;	top: 50px;	width:	50px; height:  50px;"></div>
+    <div class="coreship collider" style="left: 50px;top: 50px; width: 200px; height: 50px;">
+        <img class="rotate_button" onClick="rotationButtonClicked(this);" src="assets/img/rotate.png"></div>
+    <div class="crashzone" style="left: 250px;top: 50px; width:	50px; height:	50px;"></div>
+    <div class="crashzone" style="left:	50px;top:  100px; width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left: 100px;top:  100px; width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left:	150px;top: 100px; width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left:	200px;top: 100px; width:  50px; height:  50px;"></div>
+</div>
+<div class="ship ship_5" style="left: 0px;top:  0px;" id="7">
+    <div class="crashzone" style="left: 50px;	top:  0px; 	width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left: 100px;	top:  0px; 	width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left: 150px;	top:  0px; 	width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left: 200px;	top:  0px; 	width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left: 250px;	top:  0px; 	width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left:	 0px;	top: 50px;	width:	50px; height:  50px;"></div>
+    <div class="coreship collider" style="left: 50px;top: 50px; width: 250px; height: 50px;">
+        <img class="rotate_button" onClick="rotationButtonClicked(this);" src="assets/img/rotate.png"></div>
+    <div class="crashzone" style="left: 300px;top: 50px; width:	50px; height:	50px;"></div>
+    <div class="crashzone" style="left:	50px;top:  100px; width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left: 100px;top:  100px; width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left:	150px;top: 100px; width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left:	200px;top: 100px; width:  50px; height:  50px;"></div>
+    <div class="crashzone" style="left:	250px;top: 100px; width:  50px; height:  50px;"></div>
+</div>
+
+</body>
+</html>

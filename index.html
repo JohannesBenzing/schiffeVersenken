@@ -1,0 +1,20 @@
+<script type="text/javascript" src="js/libs/jquery.js"></script>
+<script type="text/javascript" src="js/libs/jquery.session.js"></script>
+<script type="text/javascript" src="js/libs/highcharts.js"></script>
+<script type="text/javascript" src="js/libs/highcharts-more.js"></script>
+
+<script type="text/javascript" src="js/settings.js"></script>
+<script type="text/javascript" src="js/matches.js"></script>
+
+<link rel="stylesheet" type="text/css" href="css/style.css"/>
+
+<div id="banner"><img src="assets/img/banner.png"/></div>
+
+<ul id="gamesList"></ul>
+
+<input id="matchName" type="text" placeHolder="Name der Partie" size="25">
+<input id="matchPassword" type="password" placeHolder="Passwort (optional)" size="25">
+<button onClick="createMatch();">Neue Partie</button>
+<button onClick="getMetaStatistics();">Zeige Statistiken aller Spiele</button>
+<div id="metastatistics"></div>
+<div id="metastatisticstime"></div>

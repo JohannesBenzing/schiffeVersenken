@@ -1,0 +1,16 @@
+<script type="text/javascript" src="js/libs/jquery.js"></script>
+
+Diese Seite in einem Tab/Fenster offen lassen, damit jede Minute einmal die Anzahl der laufenden Partien in die Datenbank geschrieben wird!
+
+<script>
+    updateNumberOfGamesIntervalId = setInterval(function () {
+        updateNumberOfGames();
+    }, 60000);
+
+    function updateNumberOfGames() {
+        $.post(
+                "server/metastatistics.php",
+                { updateNumberOfGames: "somestring" }
+        );
+    }
+</script>
